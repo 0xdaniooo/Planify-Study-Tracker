@@ -1,0 +1,77 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}Planify - Login{% endblock %}</title>
+
+        {% block styling %}
+        <style>
+            .card-styling {
+                margin-top: 80px;
+                margin-bottom: 80px;
+                box-shadow: 0 1px 1px 0 #1a1a1a;
+            }
+
+            .form-control:focus {
+                box-shadow: none;
+                border: 3px #ffde59 solid;
+            }
+
+            .btn-confirm {
+                background-color: #ffde59;
+            }
+
+            .error-message {
+                background-color: #fef0f0;
+                border: 1px #f48f8d solid;
+                padding: 5px;
+                color: #cc5655;
+            }
+        </style>
+        {% endblock %}
+    </head>
+        
+    <body>
+        {% block content %}
+        <form method="POST" action="">
+            {% csrf_token %}
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="card card-styling">
+                            <div class="card-body">
+                                <div class="mb-3 text-center">
+                                    <div class="d-flex justify-content-center align-items-center mb-3">
+                                        <img src="{% static 'base/favicon.png' %}" class="img-fluid" style="width: 90px; height: 90px;">
+                                    </div>
+                                    <h4>Welcome Back</h4>
+                                </div>
+                                <div class="mb-3">
+                                    {% for message in messages %}
+                                    <p class="error-message">{{ message}}</p>
+                                    {% endfor %}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form.username | as_crispy_field}}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form.password | as_crispy_field}}
+                                </div>
+                                <div class="mb-3 d-flex justify-content-around align-items-center">
+                                    <button type="submit" class="btn btn-confirm">Login</button>
+                                </div>
+                                <div class="mb-3 text-center">
+                                    <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        {% endblock %}
+    </body>
+</html>

@@ -1,0 +1,67 @@
+<!--Main HTML, use to theme other HTML docs-->
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}Planify{% endblock %}</title>
+        <link rel="icon" type="image/x-icon" href="{% static 'base/favicon.png' %}">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+        <style>
+            body {
+                min-height: 100vh;
+                position: relative;
+                margin: 0;
+                padding-bottom: 50px;
+                box-sizing: border-box;
+                background-color: #f2f2f5;
+            }
+
+            footer {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                padding-bottom: 80px;
+                height: 50px;
+            }
+        </style>
+
+        {% block styling %}
+        {% endblock %}
+    </head>
+
+    <body>
+        {% block header %}
+        <div class="container-fluid" style="background-color: white; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">
+            <div class="row d-flex justify-content-between align-items-center">
+                <div class="col-4">
+                    <a href="{% url 'get-started' %}">
+                        <img src="{% static 'base/logo.png' %}" class="img-fluid" alt="Image 1" style="padding-top:20px; margin-bottom: 30px; width:220px;">
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+
+        {% block content %}
+        {% endblock content %}
+        
+        <footer>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 d-flex align-items-center justify-content-center" style="margin-bottom: 30px;">
+                        <img src="{% static 'base/daniooo.png' %}" id="watermark" alt="Daniooo" style="height:50px; width:50px; margin-right:10px;">
+                        <a href="https://daniooo.com">Made by Daniooo</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </body>
+
+    {% block scripts %}
+    {% endblock scripts %}
+</html>

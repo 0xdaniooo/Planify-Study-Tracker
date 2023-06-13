@@ -1,0 +1,1216 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Planify - Study Tracker</title>
+        <link rel="icon" type="image/x-icon" href="{% static 'base/favicon.png' %}">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+        
+        <style>
+            /* Styling for my account button */
+            .btn-my-account {
+                background-color: #ffde59;
+            }
+
+            .btn-my-account:hover {
+                background-color: #ffde59;
+                box-shadow: inset 0px 0px 0px 3px #e0b91c;
+            }
+
+            /* Green circle used for positive nodes */
+            .green-circle {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: #6fd571;
+                margin: 0 auto;
+            }
+
+            /* Red circle used for negative nodes */
+            .red-circle {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: #fe5b58;
+                margin: 0 auto;
+            }
+
+            .white-circle {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: #d4d4d4;
+                margin: 0 auto;
+            }
+
+            .green-circle:hover {
+                border: 2px solid grey;
+            }
+
+            .red-circle:hover {
+                border: 2px solid grey;
+            }
+
+            .white-circle:hover {
+                border: 2px solid grey;
+            }
+
+            /* Used for table names */
+            .transparent-button {
+                color: black;
+                background-color: #34cea1;
+                margin: 0 auto;
+                width: 100%;
+                height: 100%;
+                font-size: 20px;
+            }
+            
+            .transparent-button:hover {
+                color: black;
+                box-shadow: inset 0px 0px 0px 3px #20ba8d;
+                background-color: #34cea1;
+            }
+
+            /* Used for subjects and weeks */
+            .grey-button {
+                color: black;
+                background-color: rgb(221, 219, 219);
+                margin: 0 auto;
+                width: 100%;
+                height: 100%;
+            }
+
+            .grey-button:hover {
+                color: black;
+                box-shadow: inset 0px 0px 0px 3px grey;
+                background-color: rgb(221, 219, 219);
+            }
+
+            /* Used to create new subjects and weeks */
+            .add-button {
+                color: black;
+                margin: 0 auto;
+                width: 100%;
+                height: 100%;
+            }
+
+            .add-button:hover {
+                color: black;
+                box-shadow: inset 0px 0px 0px 3px grey;
+            }
+
+            /* Used to create new tables */
+            .create-table-btn {
+                color: white;
+                background-color: #34cea1;
+                margin-right: 50px;
+                margin-bottom: 20px;
+                position: fixed;
+                bottom: 20px; 
+                right: 20px; 
+                z-index: 9999; 
+            }
+
+            .create-table-btn:hover {
+                color: white;
+                background-color: #34cea1;
+                box-shadow: inset 0px 0px 0px 3px #20ba8d;
+            }
+
+            .save-btn {
+                background-color: #34cea1;
+                color: white;
+            }
+
+            .save-btn:hover {
+                background-color: #34cea1;
+                color: white;
+                box-shadow: inset 0px 0px 0px 3px #25b88c;
+            }
+
+            .delete-btn {
+                background-color: #dc3545;
+                color: white;
+            }
+
+            .delete-btn:hover {
+                background-color: #dc3545;
+                color: white;
+                box-shadow: inset 0px 0px 0px 3px #bf2938;
+            }
+
+            .back-btn {
+                background-color: rgb(166, 166, 166);
+                color: white;
+            }
+
+            .back-btn:hover {
+                background-color: rgb(166, 166, 166);
+                color: white;
+                box-shadow: inset 0px 0px 0px 3px rgb(159, 159, 159);
+            }
+
+            .red-delete-text {
+                color: #dc3545;
+            }
+
+            /* Provides horizontal scrollbar for overflowing tables */
+            table {
+                width: max-content;
+                table-layout: auto;
+                border-collapse: collapse;
+                color: white;
+                padding: 30px;
+            }
+
+            body {
+                min-height: 100vh;
+                position: relative;
+                margin: 0;
+                padding-bottom: 50px;
+                box-sizing: border-box;
+                background-color: #f2f2f5;
+            }
+
+            footer {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                padding-bottom: 80px;
+                height: 50px;
+            }
+
+            /* Media queries to resize quote text to fit screen (xs, sm, md, lg, xl) */
+            @media (min-width: 100px) {
+                .quote-text {
+                    font-size: 14px;
+                }
+            }
+
+            @media (min-width: 576px) {
+                .quote-text {
+                    font-size: 14px;
+                }
+            }
+
+            @media (min-width: 768px) {
+                .quote-text {
+                    font-size: 16px;
+                }
+            }
+
+            @media (min-width: 992px) {
+                .quote-text {
+                    font-size: 20px;
+                }
+            }
+
+            @media (min-width: 1200px) {
+                .quote-text {
+                    font-size: 26px;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <!-- Header -->
+        <div class="container-fluid" style="background-color: white; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">
+            <div class="row d-flex justify-content-between align-items-center">
+                <div class="col-3 d-flex justify-content-between align-items-center">
+                    <a href="{% url 'get-started' %}">
+                        <img src="{% static 'base/logo.png' %}" class="img-fluid" alt="Image 1" style="padding-top:20px; margin-bottom: 30px; width:220px;">
+                    </a>
+                </div>
+                <div class="col-6 d-flex justify-content-center">
+                    <p id="quote-text"></p>
+                </div>                    
+                <div class="col-3 d-flex justify-content-end">
+                    <div class="dropdown">
+                        <button class="btn btn-my-account dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">My Account</button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="{% url 'edit-account' %}">Edit Account</a></li>
+                            <li><a class="dropdown-item" href="{% url 'change-password' %}">Change Password</a></li>
+                            <li><a class="dropdown-item" href="{% url 'delete-account' %}" style="color: red;">Delete Account</a></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Log Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="get-started-content" class="d-flex flex-column justify-content-center" style="height: 0; visibility: hidden;">
+            <div class="container">
+                <div class="row mb-5">
+                    <div class="col-12 text-center">
+                        <h4>Get started by clicking the <button type="button" class="btn" style="color: white; background-color: #34cea1; pointer-events: none;">+ Create Table</button> button</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Anchor for all tables -->
+        <div id="tables-root">
+            <div class="container-fluid">
+                
+            </div>
+        </div>
+
+        <!-- Button to display table creation modal -->
+        <button id="create-table-btn" class="btn create-table-btn" data-bs-toggle="modal" data-bs-target="#tableCreateInteractions">+ Create Table</button>
+
+        <!-- Modal For Table Create -->
+        <div class="modal fade" id="tableCreateInteractions" aria-hidden="true" aria-labelledby="tableCreateInteractionsLabel" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tableCreateInteractionsLabel">Table</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-2">
+                                    <p>Name:</p>
+                                </div>
+                                <div class="col-10 d-flex flex-column h-100">
+                                    <textarea id="table-name-input-field"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="create-table" type="button" class="btn save-btn" data-bs-dismiss="modal">Create Table</button>
+                        <button type="button" class="btn back-btn" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal For Table Interactions -->
+        <div class="modal fade" id="tableInteractions" aria-hidden="true" aria-labelledby="tableInteractionsLabel" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tableInteractionsLabel">Table</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-2">
+                                    <p>Name:</p>
+                                </div>
+                                <div class="col-10 d-flex flex-column h-100">
+                                    <textarea id="table-name-input-update" class="flex-grow-1"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="rename-table" type="button" class="btn save-btn" data-bs-dismiss="modal">Save Changes</button>
+                        <button type="button" class="btn delete-btn" data-bs-target="#tableDeleteConfirm" data-bs-toggle="modal" data-bs-dismiss="modal">Delete Table</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Table Delete Confirmation -->
+        <div class="modal fade" id="tableDeleteConfirm" aria-hidden="true" aria-labelledby="tableDeleteConfirmLabel" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tableDeleteConfirmLabel">Delete Table</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <p>Are you sure you want to delete this table? (this includes all related tasks and weeks)</p>
+                                <p class="red-delete-text">This action cannot be undone.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="delete-table" type="button" class="btn delete-btn" data-bs-dismiss="modal">Yes</button>
+                        <button class="btn back-btn" data-bs-target="#tableInteractions" data-bs-toggle="modal" data-bs-dismiss="modal">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal For Subject Add -->
+        <div class="modal fade" id="subjectCreateModal" aria-hidden="true" aria-labelledby="subjectCreateModalLabel" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="subjectCreateModalLabel">Add Task</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-2">
+                                    <p>Name:</p>
+                                </div>
+                                <div class="col-10 d-flex flex-column h-100">
+                                    <textarea id="subject-create-name-input"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="create-subject" type="button" class="btn save-btn" data-bs-dismiss="modal">Add</button>
+                        <button type="button" class="btn back-btn" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal For Subject Interactions -->
+        <div class="modal fade" id="subjectInteractions" aria-hidden="true" aria-labelledby="subjectInteractionsLabel" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="subjectInteractionsLabel">Task</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-2">
+                                    <p>Name:</p>
+                                </div>
+                                <div class="col-10 d-flex flex-column h-100">
+                                    <textarea id="subject-name-input-update" class="flex-grow-1"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="rename-subject" type="button" class="btn save-btn" data-bs-dismiss="modal">Save Changes</button>
+                        <button type="button" class="btn delete-btn" data-bs-target="#subjectDeleteConfirm" data-bs-toggle="modal" data-bs-dismiss="modal">Delete Task</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Subject Delete Confirmation -->
+        <div class="modal fade" id="subjectDeleteConfirm" aria-hidden="true" aria-labelledby="subjectDeleteConfirmLabel" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="subjectDeleteConfirmLabel">Delete Task</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <p>Are you sure you want to delete this task?</p>
+                                <p class="red-delete-text">This action cannot be undone.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="delete-subject" type="button" class="btn delete-btn" data-bs-dismiss="modal">Yes</button>
+                        <button class="btn back-btn" data-bs-target="#subjectInteractions" data-bs-toggle="modal" data-bs-dismiss="modal">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal For Week Interactions -->
+        <div class="modal fade" id="weekInteractions" aria-hidden="true" aria-labelledby="weekInteractionsLabel" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="weekInteractionsLabel">Week</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <p>Set all week's nodes as:</p>
+                            <div class="row mb-2">
+                                <div class="col-2 d-flex justify-content-end">
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #d4d4d4;"></div>
+                                </div>
+                                <div class="col-10 justify-content-start">
+                                    <button id="set-all-inactive" class="btn grey-button" data-bs-dismiss="modal">Inactive</button>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-2 d-flex justify-content-end">
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #6fd571;"></div>
+                                </div>
+                                <div class="col-10 justify-content-start">
+                                    <button id="set-all-complete" class="btn grey-button" data-bs-dismiss="modal">Complete</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-2 d-flex justify-content-end">
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #fe5b58;"></div>
+                                </div>
+                                <div class="col-10 justify-content-start">
+                                    <button id="set-all-incomplete" class="btn grey-button" data-bs-dismiss="modal">Incomplete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn delete-btn" data-bs-target="#weekDeleteConfirm" data-bs-toggle="modal" data-bs-dismiss="modal">Delete Week</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Week Delete Confirmation -->
+        <div class="modal fade" id="weekDeleteConfirm" aria-hidden="true" aria-labelledby="weekDeleteConfirmLabel" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="weekDeleteConfirmLabel">Delete Week</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <p>Are you sure you want to delete this week?</p>
+                                <p class="red-delete-text">This action cannot be undone.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="delete-week" type="button" class="btn delete-btn" data-bs-dismiss="modal">Yes</button>
+                        <button class="btn back-btn" data-bs-target="#weekInteractions" data-bs-toggle="modal" data-bs-dismiss="modal">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer watermark -->
+        <footer>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 d-flex align-items-center justify-content-center" style="margin-bottom: 30px;">
+                        <img src="{% static 'base/daniooo.png' %}" id="watermark" alt="Daniooo" style="height:50px; width:50px; margin-right:10px;">
+                        <a href="https://daniooo.com">Made by Daniooo</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </body>
+ 
+    <script>
+        var csrftoken = getCookie('csrftoken')
+        var masterTable = []
+
+        var currentTable
+        var currentSubject 
+        var currentWeek
+
+        var userId = '{{user.id}}'
+
+        initialisePage()
+        generateQuote()
+
+        // Creates a session cookie
+        function getCookie(name) 
+        {
+            var cookieValue = null
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function generateQuote()
+        {
+            let quotes = ['“Success is not final, failure is not fatal: it is the courage to continue that counts.” - Winston Churchill',
+                    '“Compare yourself to who you were yesterday, not to who someone else is today.” - Jordan Peterson',
+                    '“If you fail to plan, you are planning to fail.” - Benjamin Franklin',
+                    '“It\'s no use going back to yesterday, because I was a different person then.” - Lewis Carroll',
+                    '“Work hard in silence, let your success be the noise.” - Frank Ocean',
+                    '“If opportunity doesn\'t knock, build a door.” - Kurt Cobain',
+                    '“Today is your opportunity to build the tomorrow you want.” - Ken Poirot',
+                    '“Don\'t stop when you\'re tired, stop when you\'re done.” - Wesley Snipes',
+                    '“You are the artist of your own life. Don\'t hand the paintbrush to anyone else.” - Unknown',
+                    '“Live as if you were to die tomorrow. Learn as if you were to live forever.” - Mahatma Ghandi',
+                    '“All our dreams can come true, if we have the courage to pursue them.” - Walt Disney',
+                    '“One day or day one. You decide.” - Unknown',
+                ]
+
+            let randomQuote = quotes[Math.floor(Math.random() * quotes.length)]
+            let quoteText = document.getElementById('quote-text')
+            quoteText.innerHTML = randomQuote
+            quoteText.classList.add('quote-text')
+        }
+
+        // Load get started message if no tables exist
+        function loadGetStarted()
+        {   
+            let tablesExist = 0
+
+            for (let i = 0; i < masterTable.length; i++)
+            {
+                // Error check
+                if (masterTable[i] === undefined || masterTable[i][0] === undefined || masterTable[i][0][0] === undefined || masterTable[i][0][0] === -1) continue
+
+                if (masterTable[i][0][0] != null) 
+                {
+                    tablesExist = 1
+                    break
+                }
+            }
+
+            let getStartedContent = document.getElementById('get-started-content')
+
+            // Disable get started message if tables exist
+            if (tablesExist == 1)
+            {
+                getStartedContent.style.visibility = "hidden";
+                getStartedContent.style.height = "0";
+            }
+
+            // Enale get started message if no tables exist
+            else
+            {
+                getStartedContent.style.visibility = "visible";
+                getStartedContent.style.height = "80vh";
+            }
+        }
+
+        // Initialises all existing tables onto the page
+        async function initialisePage()
+        {
+            const tables = await fetch(`api/getTables/`)
+            .then(response => response.json())
+
+            let tablesRoot = document.getElementById('tables-root')
+
+            for (let i = 0; i < tables.length; i++)
+            {
+                masterTable.push(new Array(4))
+
+                masterTable[i][0] = await fetch(`api/getTable/${tables[i].id}/`)
+                .then(response => response.json())
+
+                masterTable[i][1] = await fetch(`api/getSubjects/${tables[i].id}/`)
+                .then(response => response.json())
+
+                masterTable[i][2] = await fetch(`api/getWeeks/${tables[i].id}/`)
+                .then(response => response.json())
+
+                masterTable[i][3] = await fetch(`api/getNodes/${tables[i].id}/`)
+                .then(response => response.json())
+
+                // Create anchor for table + create pass metric element
+                tablesRoot.innerHTML += `<div class="row" id="table-row-${tables[i].id}" style="margin: 50px; padding: 20px; background-color: white; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);"><div class="table-responsive col-xs-9 col-sm-9 col-md-9 col-lg-8 col-xl-10"><table id="table-${tables[i].id}"></table></div><div class="col-xs-3 col-sm-3 col-md-3 col-lg-4 col-xl-2" style="display: flex; justify-content: center; align-items: center; flex-direction: column;"><p style="font-size: 20px;">Likelihood of passing</p><p id="pass-metric-${tables[i].id}"></div></div>`
+            }
+
+            // Event listener for creating a new table (inside modal)
+            document.getElementById('create-table').addEventListener('click', () => {
+                let tableNameBox = document.getElementById('table-name-input-field')
+                let tableName = tableNameBox.value
+                tableCreate(tableName)
+                tableNameBox.value = null
+            })
+
+            // Event listener for updating a table (inside modal)
+            document.getElementById('rename-table').addEventListener('click', () => {
+                tableUpdate(currentTable)
+            })
+
+            // Event listener for deleting a table (inside modal)
+            document.getElementById('delete-table').addEventListener('click', () => {
+                tableDelete(currentTable)
+            })
+
+            // Event listener for adding a new subject (inside modal)
+            document.getElementById(`create-subject`).addEventListener('click', () => {
+                let subjectNameBox = document.getElementById(`subject-create-name-input`)
+                let subjectName = subjectNameBox.value
+                subjectCreate(currentTable, subjectName)
+                subjectNameBox.value = null
+            })
+
+            // Event listener for updating a subject (inside modal)
+            document.getElementById('rename-subject').addEventListener('click', () => {
+                subjectUpdate(currentTable, currentSubject)
+            })
+
+            // Event listener for deleting a subject (inside modal)
+            document.getElementById('delete-subject').addEventListener('click', () => {
+                subjectDelete(currentTable, currentSubject)
+            })
+
+            // Event listener for deleting a week (inside modal)
+            document.getElementById('delete-week').addEventListener('click', () => {
+                weekDelete(currentTable, currentWeek)
+            })
+
+            // Event listener for setting all weeks nodes to inactive
+            document.getElementById('set-all-inactive').addEventListener('click', () => {
+                let tableIndex = -1
+
+                // Find the table information
+                for (let i = 0; i < masterTable.length; i++)
+                {
+                    if (masterTable[i][0][0].id == currentTable.id) tableIndex = i
+                }
+
+                // Collect all of the weeks nodes
+                let weeksNodes = masterTable[tableIndex][3].filter(function(obj) {
+                    return obj.week === currentWeek.id
+                })
+
+                for (let i = 0; i < weeksNodes.length; i++)
+                {
+                    updateNodeCustom(currentTable, weeksNodes[i], false, true)
+                }
+
+                getData(currentWeek.table)
+            })
+
+            // Event listener for setting all weeks nodes to complete
+            document.getElementById('set-all-complete').addEventListener('click', () => {
+                let tableIndex = -1
+
+                // Find the table information
+                for (let i = 0; i < masterTable.length; i++)
+                {
+                    if (masterTable[i][0][0].id == currentTable.id) tableIndex = i
+                }
+
+                // Collect all of the weeks nodes
+                let weeksNodes = masterTable[tableIndex][3].filter(function(obj) {
+                    return obj.week === currentWeek.id
+                })
+
+                for (let i = 0; i < weeksNodes.length; i++)
+                {
+                    updateNodeCustom(currentTable, weeksNodes[i], true, false)
+                }
+
+                getData(currentWeek.table)
+            })
+
+            // Event listener for setting all weeks nodes to incomplete
+            document.getElementById('set-all-incomplete').addEventListener('click', () => {
+                let tableIndex = -1
+
+                // Find the table information
+                for (let i = 0; i < masterTable.length; i++)
+                {
+                    if (masterTable[i][0][0].id == currentTable.id) tableIndex = i
+                }
+
+                // Collect all of the weeks nodes
+                let weeksNodes = masterTable[tableIndex][3].filter(function(obj) {
+                    return obj.week === currentWeek.id
+                })
+
+                for (let i = 0; i < weeksNodes.length; i++)
+                {
+                    updateNodeCustom(currentTable, weeksNodes[i], false, false)
+                }
+
+                getData(currentWeek.table)
+            })
+
+            // Render each table onto the screen
+            for (let i = 0; i < tables.length; i++)
+            {
+                renderTable(tables[i].id)
+            }
+
+            // Display get started message if no tables exist
+            loadGetStarted()
+        } 
+        
+        // Obtains data for a given table
+        async function getData(tableId)
+        {
+            let tableIndex = -1
+
+            for (let i = 0; i < masterTable.length; i++)
+            {
+                if (masterTable[i][0][0].id == tableId) tableIndex = i
+            }
+
+            // Adds new table to the masterTable
+            if (tableIndex == -1)
+            {
+                tableIndex = masterTable.length
+                masterTable.push(new Array(4))
+            }
+
+            masterTable[tableIndex][0] = await fetch(`api/getTable/${tableId}/`)
+            .then(response => response.json())
+
+            masterTable[tableIndex][1] = await fetch(`api/getSubjects/${tableId}/`)
+            .then(response => response.json())
+
+            masterTable[tableIndex][2] = await fetch(`api/getWeeks/${tableId}/`)
+            .then(response => response.json())
+
+            masterTable[tableIndex][3] = await fetch(`api/getNodes/${tableId}/`)
+            .then(response => response.json())
+
+            // Display get started message if no tables exist
+            loadGetStarted()
+
+            // Re-render the updated table
+            renderTable(tableId)
+        }
+
+        /*
+            masterTable[a][b][c]:
+            - a = Table
+            - b = Data collection (table, subjects, weeks, nodes)
+            - c = Individual object
+
+            completeTables[a][b][c]:
+            - a = Table
+            - b = Row (table, subjects, weeks, nodes)
+            - c = Individual object
+        */
+
+        // Organizes all the table data, renders the HTML table and adds event listeners
+        function renderTable(tableId)
+        {
+            let tableIndex = 0
+            let sortedTable = []
+
+            for (let i = 0; i < masterTable.length; i++)
+            {
+                if (masterTable[i][0][0].id == tableId) tableIndex = i
+            }
+
+            // Wipe table clean
+            let table = document.getElementById(`table-${masterTable[tableIndex][0][0].id}`)
+            while (table.firstChild) table.firstChild.remove()
+
+            // Wipe metric clean
+            let metric = document.getElementById(`pass-metric-${masterTable[tableIndex][0][0].id}`)
+            metric.textContent = ""
+
+            sortedTable[0] = new Array(0)
+
+            // Add table name onto first row
+            sortedTable[0].push(masterTable[tableIndex][0][0])
+            for (let i = 0; i < masterTable[tableIndex][2].length; i++)
+            {
+                // Add weeks onto first row
+                sortedTable[0].push(masterTable[tableIndex][2][i])
+            }
+
+            // Add subjects onto their individual rows
+            for (let sIter = 0; sIter < masterTable[tableIndex][1].length; sIter++)
+            {
+                // Create row for subject
+                sortedTable.push(new Array(masterTable[tableIndex][2].length + 1))
+
+                // Add subject onto row
+                sortedTable[sortedTable.length - 1][0] = masterTable[tableIndex][1][sIter]
+
+                // Add nodes onto row
+                for (let nIter = 0; nIter < masterTable[tableIndex][3].length; nIter++)
+                {
+                    // Match node to its corresponding subject
+                    if (masterTable[tableIndex][3][nIter].subject == masterTable[tableIndex][1][sIter].id)
+                    {
+                        // Iterate over weeks
+                        for (let wIter = 1; wIter < sortedTable[0].length; wIter++)
+                        {
+                            // If node matches the week, add it to its correct place
+                            if (sortedTable[0][wIter].id == masterTable[tableIndex][3][nIter].week)
+                            {
+                                sortedTable[sortedTable.length - 1][wIter] = masterTable[tableIndex][3][nIter]
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Construct HTML representation of above table
+            let tableElement = document.getElementById(`table-${masterTable[tableIndex][0][0].id}`)
+            let item = ``
+
+            // Table and weeks
+            item += `<tr>`
+            item += `<th><button id="table-modal-btn-${masterTable[tableIndex][0][0].id}" class="btn transparent-button" data-bs-toggle="modal" data-bs-target="#tableInteractions">${sortedTable[0][0].name}</button></th>`
+            for (let i = 1; i < sortedTable[0].length; i++)
+            {
+                item += `<th><button class="week-modal-btn-${masterTable[tableIndex][0][0].id} btn grey-button" data-bs-toggle="modal" data-bs-target="#weekInteractions">Week ${sortedTable[0][i].number}</th>`
+            }
+            item += `<th><button id="add-week-btn-${masterTable[tableIndex][0][0].id}" class="btn add-button btn-sm">+ Add Week</button></th>`
+            item += `</tr>`
+
+            // Used to tally up nodes for metric calculations
+            let positiveNodes = 0
+            let negativeNodes = 0
+            let inactiveNodes = 0
+
+            // Subjects and nodes
+            for (let sIter = 1; sIter < sortedTable.length; sIter++)
+            {
+                // Subjects
+                item += `<tr>`
+                item += `<td><button class="subject-modal-btn-${masterTable[tableIndex][0][0].id} btn grey-button" data-bs-toggle="modal" data-bs-target="#subjectInteractions">${sortedTable[sIter][0].name}</button></td>`
+                     
+                // Nodes
+                for (let nIter = 1; nIter < sortedTable[0].length; nIter++)
+                {
+                    // White circle
+                    if (sortedTable[sIter][nIter].inactive)
+                    {
+                        item += `<td><div class="node-btn-${masterTable[tableIndex][0][0].id} white-circle"></div></td>`
+                        inactiveNodes += 1
+                    }
+
+                    // Green circle
+                    else if (sortedTable[sIter][nIter].completed)
+                    { 
+                        item += `<td><div class="node-btn-${masterTable[tableIndex][0][0].id} green-circle"></div></td>`
+                        positiveNodes += 1
+                    }
+
+                    // Red circle
+                    else 
+                    {
+                        item += `<td><div class="node-btn-${masterTable[tableIndex][0][0].id} red-circle"></div></td>`
+                        negativeNodes += 1
+                    }
+                }
+                item += `</tr>`
+            }
+
+            item += `<tr><td><button id="add-subject-modal-btn-${masterTable[tableIndex][0][0].id}" class="btn add-button btn-sm" data-bs-toggle="modal" data-bs-target="#subjectCreateModal">+ Add Task</button</td></tr>`
+            item += `</table`
+            tableElement.innerHTML += item
+
+            // Calculate pass metric
+            let metricValue = Math.floor((positiveNodes / (masterTable[tableIndex][3].length - inactiveNodes)) * 100)
+            if (isNaN(metricValue)) metricValue = 100            
+            metric.innerHTML += `${metricValue}%`
+
+            //if (metricValue >= 0 && metricValue <= 24) metric.style.color = '#ff2e2a'
+            if (metricValue >= 0 && metricValue <= 24) 
+            {
+                metric.style.color = '#ff2e2a'
+                metric.style.textShadow = '0 0 2px #ff2e2a'
+            }
+
+            else if (metricValue >= 25 && metricValue <= 49) 
+            {
+                metric.style.color = '#fe5b58'
+                metric.style.textShadow = '0 0 2px #fe5b58'
+            }
+            
+            else if (metricValue >= 50 && metricValue <= 74)
+            {
+                metric.style.color = '#6fd571' 
+                metric.style.textShadow = '0 0 2px #6fd571'
+            }
+            
+            else if (metricValue >= 75 && metricValue <= 100) 
+            {
+                metric.style.color = '#66ff69'
+                metric.style.textShadow = '0 0 2px #66ff69'
+            }
+            
+            metric.style.fontSize = "60px"
+
+            // Specifies which table to modify
+            let tabBtn = document.getElementById(`table-modal-btn-${masterTable[tableIndex][0][0].id}`)
+            tabBtn.addEventListener('click', () => {
+                currentTable = sortedTable[0][0]
+                var tableNameInput = document.getElementById('table-name-input-update')
+                tableNameInput.value = null
+                tableNameInput.value += currentTable.name
+            })
+
+            // Specifies which table to add new subject to
+            let addSubjectBtn = document.getElementById(`add-subject-modal-btn-${masterTable[tableIndex][0][0].id}`)
+            addSubjectBtn.addEventListener('click', () => {
+                currentTable = sortedTable[0][0]
+            })
+
+            // Specifies which subject to modify 
+            let subjectButtons = document.getElementsByClassName(`subject-modal-btn-${masterTable[tableIndex][0][0].id}`)
+            let subjectIndex = 0
+            for (let sIter = 1; sIter < sortedTable.length; sIter++)
+            {
+                let subject = sortedTable[sIter][0]
+                subjectButtons[subjectIndex].addEventListener('click', () => {
+                    currentTable = sortedTable[0][0]
+                    currentSubject = subject
+                    let subjectNameInput = document.getElementById('subject-name-input-update')
+                    subjectNameInput.value = null
+                    subjectNameInput.value += currentSubject.name
+                })
+
+                subjectIndex += 1
+            }
+
+            // Add week button event listener
+            let addWeekBtn = document.getElementById(`add-week-btn-${masterTable[tableIndex][0][0].id}`)
+            let week = sortedTable[0][sortedTable[0].length - 1]
+            addWeekBtn.addEventListener('click', function(table, week){
+                return function(){
+                    weekCreate(table, week)
+                }
+            }(sortedTable[0][0], week))
+
+            // Specifies which week to modify
+            let weekButtons = document.getElementsByClassName(`week-modal-btn-${masterTable[tableIndex][0][0].id}`)
+            let weekIndex = 0
+            for (let wIter = 1; wIter < sortedTable[0].length; wIter++)
+            {
+                let week = sortedTable[0][wIter]
+                weekButtons[weekIndex].addEventListener('click', () => {
+                    currentTable = sortedTable[0][0]
+                    currentWeek = week
+                })
+
+                weekIndex += 1
+            }
+
+            // Add event listeners to nodes
+            let nodeButtons = document.getElementsByClassName(`node-btn-${masterTable[tableIndex][0][0].id}`)
+            let nodeIndex = 0
+            for (let sIter = 1; sIter < sortedTable.length; sIter++)
+            {
+                for (let nIter = 1; nIter < sortedTable[sIter].length; nIter++)
+                {
+                    nodeButtons[nodeIndex].addEventListener('click', function(table, node){
+                        return function(){
+                            updateNode(table, node)
+                        }
+                    }(sortedTable[0][0], sortedTable[sIter][nIter]))
+
+                    nodeIndex += 1
+                }
+            }
+        }
+
+        // Removes a table from the page after it has been deleted
+        function removeTable(tableId)
+        {
+            let tableIndex = 0
+
+            for (let i = 0; i < masterTable.length; i++)
+            {
+                if (masterTable[i][0][0].id == tableId) tableIndex = i
+            }
+
+            // Remove all the table HTML
+            let table = document.getElementById(`table-row-${masterTable[tableIndex][0][0].id}`)
+            table.remove()
+
+            // Make the table data inaccessible
+            masterTable[tableIndex] = -1
+
+            // Display get started message if no tables exist
+            loadGetStarted()
+        }
+
+        // Creates a table object through API call
+        function tableCreate(tableName)
+        {
+            let url = `api/createTable/`
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type':'application/json',
+                        'X-CSRFToken':csrftoken,
+                    },  
+                    body:JSON.stringify({'user':userId, 'name':tableName})
+                }
+                ).then(response => response.json())
+                .then(r => 
+                {
+                    let tablesRoot = document.getElementById('tables-root')
+                    tablesRoot.innerHTML += `<div class="row" id="table-row-${r.id}" style="margin: 50px; padding: 20px; background-color: white; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);"><div class="table-responsive col-xs-9 col-sm-9 col-md-9 col-lg-8 col-xl-10"><table id="table-${r.id}"></table></div><div class="col-xs-3 col-sm-3 col-md-3 col-lg-4 col-xl-2" style="display: flex; justify-content: center; align-items: center; flex-direction: column;"><p>Likelihood of passing</p><p id="pass-metric-${r.id}"></div></div>`
+
+                    getData(r.id)
+                })
+        }
+
+        // Updates a table object through API call
+        function tableUpdate(table)
+        {
+            var url = `api/updateTable/${table.id}/`
+            var newName = document.getElementById('table-name-input-update')
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type':'application/json',
+                        'X-CSRFToken':csrftoken,
+                    },
+                    body:JSON.stringify({'user':userId, 'name':newName.value})
+                }
+                ).then(function(response)
+                {
+                    getData(table.id)
+                })
+        }
+
+        // Deletes a table object through API call
+        function tableDelete(table)
+        {
+            var url = `api/deleteTable/${table.id}/`
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type':'application/json',
+                        'X-CSRFToken':csrftoken,
+                    },
+                    body:JSON.stringify({'user':userId, 'id':table.id})
+                }
+                ).then(function(response)
+                {
+                    removeTable(table.id)
+                })
+        }
+
+        // Create subject object for specified table through API call
+        function subjectCreate(table, subjectName)
+        {
+            let url = `api/createSubject/${table.id}/`
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type':'application/json',
+                        'X-CSRFToken':csrftoken,
+                    },
+                    body:JSON.stringify({'user':userId, 'name':subjectName, 'table':table.id})
+                }
+                ).then(function(response)
+                {
+                    getData(table.id)
+                })
+        }
+
+        // Updates a subject object through API call
+        function subjectUpdate(table, subject)
+        {
+            let url = `api/updateSubject/${subject.id}/`
+            let newName = document.getElementById('subject-name-input-update')
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type':'application/json',
+                        'X-CSRFToken':csrftoken,
+                    },
+                    body:JSON.stringify({'user':userId, 'name':newName.value})
+                }
+                ).then(function(response)
+                {
+                    getData(table.id)
+                })
+        }
+
+        // Deletes a subject object through API call
+        function subjectDelete(table, subject)
+        {
+            let url = `api/deleteSubject/${subject.id}/`
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type':'application/json',
+                        'X-CSRFToken':csrftoken,
+                    },
+                    body:JSON.stringify({'user':userId, 'id':subject.id})
+                }
+                ).then(function(response)
+                {
+                    getData(table.id)
+                })
+        }
+
+        // Create week object through API call
+        function weekCreate(table, week)
+        {
+            let newWeekNumber = 1
+            if (week.hasOwnProperty("number")) newWeekNumber = week.number + 1
+            let url = `api/createWeek/${table.id}/`
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type':'application/json',
+                        'X-CSRFToken':csrftoken,
+                    },
+                    body:JSON.stringify({'user':userId, 'number':newWeekNumber, 'table':table.id})
+                }
+                ).then(function(response)
+                {
+                    getData(table.id)
+                })
+        }
+
+        // Deletes a week object through API call
+        function weekDelete(table, week)
+        {
+            let url = `api/deleteWeek/${week.id}/`
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type':'application/json',
+                        'X-CSRFToken':csrftoken,
+                    },
+                    body:JSON.stringify({'user':userId, 'id':week.id})
+                }
+                ).then(function(response)
+                {
+                    getData(table.id)
+                })
+        }
+
+        // Updates a node object through API call (normal call)
+        function updateNode(table, node)
+        {
+            let url = `api/updateNode/${node.id}/`
+            let completed = !node.completed
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type':'application/json',
+                        'X-CSRFToken':csrftoken,
+                    },
+                    body:JSON.stringify({'user':userId, 'completed':completed, 'subject':node.subject, 'week':node.week, 'inactive':false})
+                }
+                ).then(function(response)
+                {
+                    getData(table.id)
+                })
+        }
+
+        // Updates a node object through API call (custom call)
+        function updateNodeCustom(table, node, setComplete, setInactive)
+        {
+            let url = `api/updateNode/${node.id}/`
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-type':'application/json',
+                        'X-CSRFToken':csrftoken,
+                    },
+                    body:JSON.stringify({'user':userId, 'completed':setComplete, 'subject':node.subject, 'week':node.week, 'inactive':setInactive})
+                })
+        }
+    </script>
+</html>
