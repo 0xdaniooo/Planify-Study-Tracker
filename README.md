@@ -1,7 +1,7 @@
 # Planify-Study-Tracker
 A website built with Django REST Framework + Bootstrap 5 aimed at students wanting to track their studies effectively in an intuitive manner. 
 
-See it in action here: https://www.youtube.com/watch?v=s_OYAgo6N7g
+See it in action here: https://www.youtube.com/watch?v=khLnwABBBGM
 
 
 ## About
